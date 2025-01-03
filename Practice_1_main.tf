@@ -46,8 +46,8 @@ resource "aws_security_group" "environment_sg" {
 
 # EC2 instance for the environment
 resource "aws_instance" "environment_instance" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
+  ami           = local.ami_id
+  instance_type = local.instance_type
   key_name      = aws_key_pair.environment_key.key_name
   security_groups = [aws_security_group.environment_sg.name]
 
