@@ -13,19 +13,18 @@ variable "environment" {
   }
 }
 
-variable "ami_id" {
-  description = "The AMI ID to use for the instance"
-  type        = string
-  default     = "ami-01816d07b1128cd2d" # Replace with a valid AMI ID
-}
-
-variable "instance_type" {
-  description = "The instance type based on the environment"
-  type        = string
-  default     = "t2.micro"
+variable "ami_ids" {
+  description = "Mapping of instance types to their respective AMI IDs"
+  type        = map(string)
+  default = {
+    "t2.micro"  = "ami-01816d07b1128cd2d"  # Replace with actual AMI ID for t2.micro
+    "t2.medium" = "ami-01816d07b1128cd2d"  # Replace with actual AMI ID for t2.medium
+    "t2.large"  = "ami-01816d07b1128cd2d"  # Replace with actual AMI ID for t2.large
+  }
 }
 
 locals {
+  # Instance type based on environment
   instance_types = {
     test = "t2.micro"
     int  = "t2.medium"
@@ -38,6 +37,8 @@ locals {
     prod = 20
   }
 
+  # Resolve instance type and AMI ID dynamically based on environment
   instance_type = local.instance_types[var.environment]
+  ami_id        = var.ami_ids[local.instance_type]
   storage_size  = local.storage_sizes[var.environment]
 }
